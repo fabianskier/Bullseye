@@ -94,6 +94,34 @@ struct ButtonTextView: View {
     }
 }
 
+// MARK: - ScoreTextView
+
+struct ScoreTextView: View {
+    var score: Int
+    
+    var body: some View {
+        Text(String(score))
+            .bold()
+            .kerning(-0.2)
+            .foregroundColor(Color("TextColor"))
+            .font(.title3)
+    }
+}
+
+// MARK: - DateTextView
+
+struct DateTextView: View {
+    var date: Date
+    
+    var body: some View {
+        Text(date, style: .time)
+            .bold()
+            .kerning(-0.2)
+            .foregroundColor(Color("TextColor"))
+            .font(.title3)
+    }
+}
+
 struct TextViews_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
@@ -103,6 +131,8 @@ struct TextViews_Previews: PreviewProvider {
             LabelTextView(text: "Label")
             BodyTextView(text: "You scored 200 Points\n🎉🎉🎉")
             ButtonTextView(text: "Start New Round").padding()
+            ScoreTextView(score: 123)
+            DateTextView(date: Date())
         }
     }
 }

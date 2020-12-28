@@ -75,7 +75,7 @@ struct ButtonView: View {
                     }
                 )
                 .foregroundColor(.white)
-                .cornerRadius(21.0)
+                .cornerRadius(Constants.General.roundRectCornerRadius)
             
         }
         )
