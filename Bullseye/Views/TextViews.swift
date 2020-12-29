@@ -122,6 +122,23 @@ struct DateTextView: View {
     }
 }
 
+// MARK: - BigBoldTextView
+
+struct BigBoldTextView: View {
+    var text: String
+    
+    var body: some View {
+        Text(text.uppercased())
+            .kerning(2.0)
+            .foregroundColor(Color("TextColor"))
+            .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
+            .fontWeight(.black)
+            
+    }
+}
+
+// MARK: - TextViews_Previews
+
 struct TextViews_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
@@ -133,6 +150,7 @@ struct TextViews_Previews: PreviewProvider {
             ButtonTextView(text: "Start New Round").padding()
             ScoreTextView(score: 123)
             DateTextView(date: Date())
+            BigBoldTextView(text: "Title")
         }
     }
 }
