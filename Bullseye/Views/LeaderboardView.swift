@@ -10,14 +10,24 @@ import SwiftUI
 // MARK: - LeaderboardView
 
 struct LeaderboardView: View {
+    @Binding var leaderboardIsShowing: Bool
+    @Binding var game: Game
+    
     var body: some View {
         ZStack {
             Color("BackgroundColor")
                 .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
             VStack(spacing: 10) {
-                HeaderView(text: "Leaderboard")
+                HeaderView(leaderboardIsShowing: $leaderboardIsShowing, text: "Leaderboard")
                 LabelView()
-                RowView(index: 1, score: 10, date: Date())
+                ScrollView {
+                    VStack(spacing: 10) {
+                        ForEach(game.leaderboardEntries.indices) { i in
+                            let leaderboardEntry = game.leaderboardEntries[i]
+                            RowView(index: i, score: leaderboardEntry.score, date: leaderboardEntry.date)
+                        }
+                    }
+                }
             }
         }
     }
@@ -52,18 +62,35 @@ struct RowView: View {
 // MARK: - HeaderView
 
 struct HeaderView: View {
+    @Binding var leaderboardIsShowing: Bool
+    @Environment(\.verticalSizeClass) var verticalSizeClass
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    
     let text: String
     
     var body: some View {
         ZStack {
-            BigBoldTextView(text: text)
+            HStack {
+                if verticalSizeClass == .regular && horizontalSizeClass == .compact {
+                    BigBoldTextView(text: text)
+                        .padding(.leading)
+                    Spacer()
+                } else {
+                    BigBoldTextView(text: text)
+                }
+            }.padding(.top)
             
             HStack {
                 Spacer()
-                Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
+                Button(action: {
+                    withAnimation {
+                        leaderboardIsShowing = false
+                    }
+                }, label: {
                     RoundedImageViewFilled(systemName: "xmark")
                         .padding(.trailing)
                 })
+                .padding(.top)
             }
         }
     }
@@ -91,13 +118,16 @@ struct LabelView: View {
 // MARK: - LeaderboardView_Previews
 
 struct LeaderboardView_Previews: PreviewProvider {
+    static private var leaderboardIsShowing = Binding.constant(false)
+    static private var game = Binding.constant(Game(loadTestData: true))
+    
     static var previews: some View {
-        LeaderboardView()
-        LeaderboardView()
+        LeaderboardView(leaderboardIsShowing: leaderboardIsShowing, game: game)
+        LeaderboardView(leaderboardIsShowing: leaderboardIsShowing, game: game)
             .previewLayout(.fixed(width: 568, height: 320))
-        LeaderboardView()
+        LeaderboardView(leaderboardIsShowing: leaderboardIsShowing, game: game)
             .preferredColorScheme(/*@START_MENU_TOKEN@*/.dark/*@END_MENU_TOKEN@*/)
-        LeaderboardView()
+        LeaderboardView(leaderboardIsShowing: leaderboardIsShowing, game: game)
             .preferredColorScheme(/*@START_MENU_TOKEN@*/.dark/*@END_MENU_TOKEN@*/)
             .previewLayout(.fixed(width: 568, height: 320))
     }
